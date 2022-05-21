@@ -2,34 +2,6 @@ import pandas as pd, os,scipy.stats as sc, matplotlib.pyplot as plt
 from statsmodels.formula.api import ols
 import numpy as np
 
-"""Find fileName of our xlsx file in dir of project"""
-def find_fileName():
-    files = os.listdir()
-    file_name = ""
-    for file in files:
-        if file.find(".xlsx") >=0:
-            file_name = file
-    return file_name
-
-"""Choose sheet of excel fileS"""
-def find_sheetName(file):
-    sheet_name = ""
-    sheets = file.sheet_names
-    for sheet in sheets:
-        while True:
-            print(f"Do you want to choose {sheet} sheet?(y or n)")
-            answer = input().lower()
-            if answer == "y":
-                sheet_name = sheet
-                break 
-            elif answer == "n":
-                break 
-            else:
-                print("You choose wrong answer. Try again")
-        if len(sheet_name) > 0:
-            break
-    return sheet_name
-
 """Change columns name, 1 column - y, others - x_. Delete region column"""
 def change_columns(data):
     columns = list(data.columns)
@@ -141,33 +113,27 @@ def backward_elimination(data, response):
 
 def main():
     print("Starting of execution lab 1")
-    file_name = find_fileName()
     try:
-        file = pd.ExcelFile(file_name)
-        sheet = find_sheetName(file)
-        if sheet != "":
-            data = pd.read_excel(file_name,sheet_name=sheet)
-            data.drop(data.columns[0],axis=1,inplace=True)
-            change_columns(data)
-            independed_variables = data.drop(columns='y')
+        data = pd.read_excel(r'C:\Users\asus\projects\econometrica_lab1\данные.xlsx',sheet_name='Обработка')
+        data.drop(data.columns[0],axis=1,inplace=True)
+        change_columns(data)
+        independed_variables = data.drop(columns='y')
 
-            show_describe_stat(independed_variables)
+        show_describe_stat(independed_variables)
 
-            model = get_model(independed_variables,data)
-            get_model_info(model)
-            residuals = get_residuals(model)
-            
-            check_normality_of_residuals(residuals)
+        model = get_model(independed_variables,data)
+        get_model_info(model)
+        residuals = get_residuals(model)
+        
+        check_normality_of_residuals(residuals)
 
-            check_multicollinearity(data)
+        check_multicollinearity(data)
 
-            forward_model = forward_selected(data, "y")
-            get_model_info(forward_model)
+        forward_model = forward_selected(data, "y")
+        get_model_info(forward_model)
 
-            backward_model = backward_elimination(data, "y")
-            get_model_info(backward_model)
-        else:
-            print("Sheet didn't choose")
+        backward_model = backward_elimination(data, "y")
+        get_model_info(backward_model)
     except FileNotFoundError:
         print("File didn't found")
 
