@@ -113,8 +113,10 @@ def backward_elimination(data, response):
 
 def main():
     print("Starting of execution lab 1")
+    file_name = r'C:\Users\asus\projects\econometrica_lab1\данные.xlsx'
+    sheet = 'Обработка'
     try:
-        data = pd.read_excel(r'C:\Users\asus\projects\econometrica_lab1\данные.xlsx',sheet_name='Обработка')
+        data = pd.read_excel(file_name,sheet_name=sheet)
         data.drop(data.columns[0],axis=1,inplace=True)
         change_columns(data)
         independed_variables = data.drop(columns='y')
